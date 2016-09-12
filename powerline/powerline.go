@@ -9,6 +9,7 @@ type Powerline struct {
 	ShTemplate    string
 	BashTemplate  string
 	ColorTemplate string
+	ShellBg       string
 	Reset         string
 	Lock          string
 	Network       string
@@ -50,18 +51,34 @@ func (p *Powerline) PrintSegments() string {
 	var buffer bytes.Buffer
 	for i, Segment := range p.Segments {
 		if (i + 1) == len(p.Segments) {
-			nextBackground = p.Reset
+			// this fixes weird color-matching behavior
+			nextBackground = p.BackgroundColor(p.ShellBg)
 		} else {
 			nextBackground = p.BackgroundColor(p.Segments[i+1][1])
 		}
 		if len(Segment) == 3 {
-			buffer.WriteString(fmt.Sprintf("%s%s %s %s%s%s", p.ForegroundColor(Segment[0]), p.BackgroundColor(Segment[1]), Segment[2], nextBackground, p.ForegroundColor(Segment[1]), p.Separator))
+			buffer.WriteString(
+				fmt.Sprintf("%s%s %s %s%s%s",
+					p.ForegroundColor(Segment[0]),
+					p.BackgroundColor(Segment[1]),
+					Segment[2],
+					nextBackground,
+					p.ForegroundColor(Segment[1]),
+					p.Separator))
 		} else {
-			buffer.WriteString(fmt.Sprintf("%s%s %s %s%s%s", p.ForegroundColor(Segment[0]), p.BackgroundColor(Segment[1]), Segment[2], nextBackground, p.ForegroundColor(Segment[4]), Segment[3]))
+			buffer.WriteString(
+				fmt.Sprintf("%s%s %s %s%s%s",
+					p.ForegroundColor(Segment[0]),
+					p.BackgroundColor(Segment[1]),
+					Segment[2],
+					nextBackground,
+					p.ForegroundColor(Segment[4]),
+					Segment[3]))
 		}
 	}
 
 	buffer.WriteString(p.Reset)
+	buffer.WriteString(" ")
 
 	return buffer.String()
 }
@@ -73,6 +90,7 @@ func NewPowerline(shell string) Powerline {
 		Separator:     "\uE0B0",
 		SeparatorThin: "\uE0B1",
 		Ellipsis:      "\u2026",
+		ShellBg:       "8",
 	}
 
 	switch shell {

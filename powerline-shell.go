@@ -25,8 +25,21 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/sivel/powerline-shell-go/powerline"
+	"github.com/otann/powerline-shell-go/powerline"
 )
+
+// Colors
+const fg = "12"
+const bg = "0"
+const separatorColor = "8"
+
+const homeFg = bg
+const homeBg = "10"
+
+const cleanFg = bg
+const cleanBg = "14"
+const dirtyFg = bg
+const dirtyBg = "2"
 
 func getCurrentWorkingDir() (string, []string) {
 	dir, err := filepath.Abs(".")
@@ -104,29 +117,33 @@ func addCwd(cwdParts []string, ellipsis string, separator string) [][]string {
 	}
 
 	if home {
-		segments = append(segments, []string{"015", "031", "~"})
+		segments = append(segments, []string{homeFg, homeBg, "~"})
 
 		if len(cwdParts) > 2 {
-			segments = append(segments, []string{"250", "237", cwdParts[0], separator, "244"})
-			segments = append(segments, []string{"250", "237", ellipsis, separator, "244"})
+			segments = append(segments, []string{fg, bg, cwdParts[0], separator, separatorColor})
+			segments = append(segments, []string{fg, bg, ellipsis, separator, separatorColor})
 		} else if len(cwdParts) == 2 {
-			segments = append(segments, []string{"250", "237", cwdParts[0], separator, "244"})
+			segments = append(segments, []string{fg, bg, cwdParts[0], separator, separatorColor})
 		}
 	} else {
 		if len(cwdParts[len(cwdParts)-1]) == 0 {
-			segments = append(segments, []string{"250", "237", "/"})
+			segments = append(segments, []string{fg, bg, "/"})
 		}
 
 		if len(cwdParts) > 3 {
-			segments = append(segments, []string{"250", "237", cwdParts[1], separator, "244"})
-			segments = append(segments, []string{"250", "237", ellipsis, separator, "244"})
+			segments = append(segments, []string{fg, bg, cwdParts[1], separator, separatorColor})
+			segments = append(segments, []string{fg, bg, ellipsis, separator, separatorColor})
 		} else if len(cwdParts) > 2 {
-			segments = append(segments, []string{"250", "237", cwdParts[1], separator, "244"})
+			segments = append(segments, []string{fg, bg, cwdParts[1], separator, separatorColor})
 		}
 	}
 
+	if len(cwdParts) > 1 && len(cwdParts[len(cwdParts)-2]) > 0 {
+		segments = append(segments, []string{fg, bg, cwdParts[len(cwdParts)-2], separator, separatorColor})
+	}
+
 	if len(cwdParts) != 0 && len(cwdParts[len(cwdParts)-1]) > 0 {
-		segments = append(segments, []string{"250", "237", cwdParts[len(cwdParts)-1]})
+		segments = append(segments, []string{fg, bg, cwdParts[len(cwdParts)-1]})
 	}
 
 	return segments
@@ -153,17 +170,13 @@ func addGitInfo() []string {
 	gitStatus, gitStaged := getGitInformation()
 	if gitStatus != "" {
 		if gitStaged {
-			return []string{"015", "161", gitStatus}
+			return []string{dirtyFg, dirtyBg, gitStatus}
 		} else {
-			return []string{"000", "148", gitStatus}
+			return []string{cleanFg, cleanBg, gitStatus}
 		}
 	} else {
 		return nil
 	}
-}
-
-func addDollarPrompt() []string {
-	return []string{"015", "236", "\\$"}
 }
 
 func main() {
@@ -180,7 +193,6 @@ func main() {
 	p.AppendSegments(addCwd(cwdParts, p.Ellipsis, p.SeparatorThin))
 	p.AppendSegment(addLock(cwd, p.Lock))
 	p.AppendSegment(addGitInfo())
-	p.AppendSegment(addDollarPrompt())
 
 	fmt.Print(p.PrintSegments())
 }
