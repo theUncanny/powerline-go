@@ -111,40 +111,43 @@ func getGitInformation() (string, bool) {
 
 func addCwd(cwdParts []string, ellipsis string, separator string) [][]string {
 	segments := [][]string{}
-	home := false
+
+	// if it is root, return immediately
+	if len(cwdParts) == 1 && cwdParts[0] != "~" {
+		return [][]string{[]string{fg, bg, "/"}}
+	}
+
+	// deal with first segment
 	if cwdParts[0] == "~" {
-		cwdParts = cwdParts[1:len(cwdParts)]
-		home = true
-	}
-
-	if home {
+		// if it was home, then it's a real segment, so we remove it
 		segments = append(segments, []string{homeFg, homeBg, "~"})
-
-		if len(cwdParts) > 2 {
-			segments = append(segments, []string{fg, bg, cwdParts[0], separator, separatorColor})
-			segments = append(segments, []string{fg, bg, ellipsis, separator, separatorColor})
-		} else if len(cwdParts) == 2 {
-			segments = append(segments, []string{fg, bg, cwdParts[0], separator, separatorColor})
-		}
 	} else {
-		if len(cwdParts[len(cwdParts)-1]) == 0 {
-			segments = append(segments, []string{fg, bg, "/"})
-		}
+		// if it is not home, then print root
+		segments = append(segments, []string{fg, bg, "/", separator, separatorColor})
+	}
+	cwdParts = cwdParts[1:]
 
-		if len(cwdParts) > 3 {
-			segments = append(segments, []string{fg, bg, cwdParts[1], separator, separatorColor})
-			segments = append(segments, []string{fg, bg, ellipsis, separator, separatorColor})
-		} else if len(cwdParts) > 2 {
-			segments = append(segments, []string{fg, bg, cwdParts[1], separator, separatorColor})
-		}
+	// add second segment, if it's not last one
+	length := len(cwdParts)
+	if length >= 4 {
+		segments = append(segments, []string{fg, bg, cwdParts[0], separator, separatorColor})
 	}
 
-	if len(cwdParts) > 1 && len(cwdParts[len(cwdParts)-2]) > 0 {
-		segments = append(segments, []string{fg, bg, cwdParts[len(cwdParts)-2], separator, separatorColor})
+	// ellipsis
+	if length == 3 {
+		segments = append(segments, []string{fg, bg, cwdParts[0], separator, separatorColor})
+	} else if length > 3 {
+		segments = append(segments, []string{fg, bg, ellipsis, separator, separatorColor})
 	}
 
-	if len(cwdParts) != 0 && len(cwdParts[len(cwdParts)-1]) > 0 {
-		segments = append(segments, []string{fg, bg, cwdParts[len(cwdParts)-1]})
+	// add but-last segment
+	if length > 1 {
+		segments = append(segments, []string{fg, bg, cwdParts[length-2], separator, separatorColor})
+	}
+
+	// add last segment
+	if length > 0 {
+		segments = append(segments, []string{fg, bg, cwdParts[length-1]})
 	}
 
 	return segments
