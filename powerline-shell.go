@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"github.com/otann/powerline-shell-go/powerline"
+	"strconv"
 )
 
 // Colors
@@ -179,11 +180,25 @@ func addGitInfo() []string {
 	}
 }
 
+func addExitCode(code string) []string {
+	i, err := strconv.Atoi(code)
+	if err != nil || i == 0 {
+		return nil
+	} else {
+		return []string{"15", "1", code}
+	}
+}
+
 func main() {
 	shell := "bash"
 
 	if len(os.Args) > 1 {
 		shell = os.Args[1]
+	}
+
+	exitCode := "0"
+	if len(os.Args) > 2 {
+		exitCode = os.Args[2]
 	}
 
 	p := powerline.NewPowerline(shell)
@@ -193,6 +208,7 @@ func main() {
 	p.AppendSegments(addCwd(cwdParts, p.Ellipsis, p.SeparatorThin))
 	p.AppendSegment(addLock(cwd, p.Lock))
 	p.AppendSegment(addGitInfo())
+	p.AppendSegment(addExitCode(exitCode))
 
 	fmt.Print(p.PrintSegments())
 }
