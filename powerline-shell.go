@@ -25,7 +25,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/otann/powerline-shell-go/powerline"
+	"github.com/otann/powerline-go/powerline"
 	"strconv"
 )
 

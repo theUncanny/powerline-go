@@ -1,15 +1,27 @@
-# powerline-shell-go
+# powerline-go
 
-Attempted fork of [powerline-shell](https://github.com/milkbikis/powerline-shell) into [Go](http://golang.org/)
+Attempted fork of [powerline-shell](https://github.com/milkbikis/powerline-shell) in [Go](http://golang.org/)
 
-This application does not cover all features of powerline-shell, only those that I currently use, and it is not configurable.
+This application does not cover all features of powerline-shell, only those that I currently use.
+ 
+For now it is only configurable trough modifying the source recompilation, which is quite fast with Go.
 
 ## Usage
 
-Install the binary with
+If you haven't install go, please do by using your favourite package manager, i.e.
 
-    go get github.com/sivel/powerline-shell-go
-    go install github.com/sivel/powerline-shell-go
+    brew install golang
+    
+Don't forget to set `$GOPATH` in your shell profile and update `$PATH`, something like:
+    
+    export GOPATH=$HOME/golang
+    export PATH="$GOPATH/bin:$PATH"
+    
+
+Then install the binary with
+
+    go get github.com/otann/powerline-go
+    go install github.com/otann/powerline-go
 
 ### Bash
 
