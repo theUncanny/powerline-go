@@ -1,10 +1,12 @@
 # powerline-go
 
+<img align="center" padding="5px" alt=":)" src="/screenshot.png"/>
+
 Attempted fork of [powerline-shell](https://github.com/milkbikis/powerline-shell) in [Go](http://golang.org/)
 
 This application does not cover all features of powerline-shell, only those that I currently use.
  
-For now it is only configurable trough modifying the source recompilation, which is quite fast with Go.
+For now it is only configurable trough the source recompilation, which is quite fast with Go.
 
 ## Usage
 
