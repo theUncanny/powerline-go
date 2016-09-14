@@ -61,15 +61,14 @@ func (p *Powerline) PrintSegments() string {
 	var nextBg string
 	var buffer bytes.Buffer
 
-	//buffer.WriteString(fmt.Sprintf("%s | ", p))
-
 	for i, segment := range p.Segments {
-		// if it the last segment
 		if (i + 1) == len(p.Segments) {
+			// if it is the last one, switch to shell bg
 			nextBg = p.ShellBg
 		} else {
 			nextBg = p.Segments[i + 1].Bg
 		}
+
 		// set background for segment
 		buffer.WriteString(p.bgColor(segment.Bg))
 

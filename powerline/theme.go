@@ -11,11 +11,6 @@ type ColorTriplet struct {
 	SepFg string
 }
 
-type Path struct {
-	Anchor ColorPair
-	Path ColorTriplet
-}
-
 type Git struct {
 	Clean ColorPair
 	Dirty ColorPair
@@ -23,8 +18,8 @@ type Git struct {
 
 type Theme struct {
 	ShellBg string
-	Anchor ColorPair
-	Path
+	Home ColorPair
+	Path ColorTriplet
 	Git
 	Lock ColorPair
 	Error ColorPair
@@ -33,11 +28,8 @@ type Theme struct {
 func SolarizedDark() Theme {
 	return Theme{
 		ShellBg: "8",
-		Anchor: ColorPair{Fg: "7", Bg: "0"},
-		Path: Path{
-			Anchor: ColorPair{Bg: "10", Fg: "0"},
-			Path: ColorTriplet{Bg: "0", Fg: "12", SepFg: "8"},
-		},
+		Home: ColorPair{Bg: "10", Fg: "0"},
+		Path: ColorTriplet{Bg: "0", Fg: "12", SepFg: "8"},
 		Git: Git{
 			Clean: ColorPair{Bg: "14", Fg: "0"},
 			Dirty: ColorPair{Bg: "2", Fg: "0"},

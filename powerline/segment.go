@@ -56,8 +56,8 @@ func GetCurrentWorkingDir() (string, []string) {
 func HomeSegment(cwdParts []string, t Theme) Segment {
 	if cwdParts[0] == "~" {
 		return Segment{
-			Bg: t.Path.Anchor.Bg,
-			Fg: t.Path.Anchor.Fg,
+			Bg: t.Home.Bg,
+			Fg: t.Home.Fg,
 			values: []string{"~"},
 		}
 	} else {
@@ -84,9 +84,9 @@ func PathSegment(cwdParts []string, t Theme, s Symbols) Segment {
 	}
 
 	return Segment{
-		Bg: t.Path.Path.Bg,
-		Fg: t.Path.Path.Fg,
-		sepFg: t.Path.Path.SepFg,
+		Bg: t.Path.Bg,
+		Fg: t.Path.Fg,
+		sepFg: t.Path.SepFg,
 		values: cwdParts,
 	}
 }
