@@ -1,4 +1,6 @@
 // Copyright 2014 Matt Martz <matt@sivel.net>
+// Modifications copyright (c) 2013 Anton Chebotaev <anton.chebotaev@gmail.com>
+// 
 // All Rights Reserved.
 //
 //    Licensed under the Apache License, Version 2.0 (the "License"); you may
