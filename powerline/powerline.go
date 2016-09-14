@@ -1,79 +1,92 @@
 package powerline
 
 import (
-	"bytes"
 	"fmt"
+	"bytes"
 )
 
-type Powerline struct {
-	ShTemplate    string
-	BashTemplate  string
-	ColorTemplate string
-	ShellBg       string
-	Reset         string
+type Symbols struct {
 	Lock          string
 	Network       string
 	Separator     string
 	SeparatorThin string
 	Ellipsis      string
-	Segments      [][]string
 }
 
-func (p *Powerline) Color(prefix string, code string) string {
+func DefaultSymbols() Symbols {
+	return Symbols{
+		Lock:          "\uE0A2",
+		Network:       "\uE0A2",
+		Separator:     "\uE0B0",
+		SeparatorThin: "\uE0B1",
+		Ellipsis:      "\u2026",
+	}
+}
+
+type Powerline struct {
+	ShTemplate    string // still not quite get it
+	ColorTemplate string // how to output color
+	ShellBg       string
+	Reset         string
+	Symbols       Symbols
+	Segments      []Segment
+}
+
+func (p *Powerline) color(prefix string, code string) string {
 	return fmt.Sprintf(
 		p.ShTemplate,
 		fmt.Sprintf(p.ColorTemplate, prefix, code),
 	)
 }
 
-func (p *Powerline) ForegroundColor(code string) string {
-	return p.Color("38", code)
+func (p *Powerline) fgColor(code string) string {
+	return p.color("38", code)
 }
 
-func (p *Powerline) BackgroundColor(code string) string {
-	return p.Color("48", code)
+func (p *Powerline) bgColor(code string) string {
+	return p.color("48", code)
 }
 
-func (p *Powerline) AppendSegment(segment []string) {
-	if segment != nil {
-		p.Segments = append(p.Segments, segment)
-	}
+func (p *Powerline) AppendSegment(s Segment) {
+	p.Segments = append(p.Segments, s)
 }
 
-func (p *Powerline) AppendSegments(segments [][]string) {
-	for _, segment := range segments {
-		p.AppendSegment(segment)
-	}
-}
+
 
 func (p *Powerline) PrintSegments() string {
-	var nextBackground string
+	if len(p.Segments) == 0 {
+		return ""
+	}
+
+	var nextBg string
 	var buffer bytes.Buffer
-	for i, Segment := range p.Segments {
+
+	//buffer.WriteString(fmt.Sprintf("%s | ", p))
+
+	for i, segment := range p.Segments {
+		// if it the last segment
 		if (i + 1) == len(p.Segments) {
-			// this fixes weird color-matching behavior
-			nextBackground = p.BackgroundColor(p.ShellBg)
+			nextBg = p.ShellBg
 		} else {
-			nextBackground = p.BackgroundColor(p.Segments[i+1][1])
+			nextBg = p.Segments[i + 1].Bg
 		}
-		if len(Segment) == 3 {
-			buffer.WriteString(
-				fmt.Sprintf("%s%s %s %s%s%s",
-					p.ForegroundColor(Segment[0]),
-					p.BackgroundColor(Segment[1]),
-					Segment[2],
-					nextBackground,
-					p.ForegroundColor(Segment[1]),
-					p.Separator))
-		} else {
-			buffer.WriteString(
-				fmt.Sprintf("%s%s %s %s%s%s",
-					p.ForegroundColor(Segment[0]),
-					p.BackgroundColor(Segment[1]),
-					Segment[2],
-					nextBackground,
-					p.ForegroundColor(Segment[4]),
-					Segment[3]))
+		// set background for segment
+		buffer.WriteString(p.bgColor(segment.Bg))
+
+		// print parts with correct foregrounds
+		for j, segPart := range segment.values {
+			buffer.WriteString(p.fgColor(segment.Fg))
+			buffer.WriteString(fmt.Sprintf(" %s ", segPart))
+			if (j + 1) == len(segment.values) {
+				// last part switches background to next
+				buffer.WriteString(p.fgColor(segment.Bg))
+				buffer.WriteString(p.bgColor(nextBg))
+				buffer.WriteString(p.Symbols.Separator)
+			} else {
+				// while not last part
+				buffer.WriteString(p.fgColor(segment.sepFg))
+				buffer.WriteString(p.Symbols.SeparatorThin)
+			}
 		}
 	}
 
@@ -83,26 +96,31 @@ func (p *Powerline) PrintSegments() string {
 	return buffer.String()
 }
 
-func NewPowerline(shell string) Powerline {
-	p := Powerline{
-		Lock:          "\uE0A2",
-		Network:       "\uE0A2",
-		Separator:     "\uE0B0",
-		SeparatorThin: "\uE0B1",
-		Ellipsis:      "\u2026",
-		ShellBg:       "8",
+func NewPowerline(shell string, sym Symbols, segs []Segment, t Theme) Powerline {
+	var p Powerline
+	if shell == "zsh" {
+		p = Powerline{
+			ShTemplate:    "%s",
+			ColorTemplate: "%%{[%s;5;%sm%%}",
+			Reset:         "%{$reset_color%}",
+		}
+	} else {
+		p = Powerline{
+			ShTemplate:    "\\[\\e%s\\]",
+			ColorTemplate: "[%s;5;%sm",
+			Reset:         "\\[\\e[0m\\]",
+		}
 	}
+	p.ShellBg = t.ShellBg
+	p.Symbols = sym
 
-	switch shell {
-	case "bash":
-		p.ShTemplate = "\\[\\e%s\\]"
-		p.ColorTemplate = "[%s;5;%sm"
-		p.Reset = "\\[\\e[0m\\]"
-
-	case "zsh":
-		p.ShTemplate = "%s"
-		p.ColorTemplate = "%%{[%s;5;%sm%%}"
-		p.Reset = "%{$reset_color%}"
+	clean := []Segment{}
+	for _, seg := range segs {
+		if len(seg.values) > 0 {
+			clean = append(clean, seg)
+		}
 	}
+	p.Segments = clean
+
 	return p
 }
