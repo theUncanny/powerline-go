@@ -1,6 +1,8 @@
 # powerline-go
 
-<img align="center" padding="5px" alt=":)" src="/screenshot.png"/>
+<img align="center" padding="5px" alt=":)" width="834px" src="/screenshot.png"/>
+
+*Font on the screenshot — amazing [Fira Code](https://github.com/tonsky/FiraCode)*
 
 Attempted fork of [powerline-shell](https://github.com/milkbikis/powerline-shell) in [Go](http://golang.org/)
 
