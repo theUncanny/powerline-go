@@ -27,9 +27,9 @@ type Theme struct {
 
 func SolarizedDark() Theme {
 	return Theme{
-		ShellBg: "8",
+		ShellBg: "0",
 		Home: ColorPair{Bg: "10", Fg: "0"},
-		Path: ColorTriplet{Bg: "0", Fg: "12", SepFg: "8"},
+		Path: ColorTriplet{Bg: "8", Fg: "12", SepFg: "0"},
 		Git: Git{
 			Clean: ColorPair{Bg: "14", Fg: "0"},
 			Dirty: ColorPair{Bg: "2", Fg: "0"},
