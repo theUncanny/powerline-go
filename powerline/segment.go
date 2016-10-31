@@ -22,8 +22,8 @@ type Segment struct {
 func HostSegment(t Theme) Segment {
 	hn, _ := os.Hostname()
 	return Segment{
-		Bg:     t.Lock.Bg,
-		Fg:     t.Lock.Fg,
+		Bg:     t.Host.Bg,
+		Fg:     t.Host.Fg,
 		values: []string{hn},
 	}
 }
