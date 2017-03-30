@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/theUncanny/powerline-go/powerline"
 )
 
@@ -49,7 +50,13 @@ func main() {
 		powerline.ExitCodeSegment(exitCode, theme),
 	}
 
+	// [DEBUG]
+	spew.Dump(segments)
+
 	p := powerline.NewPowerline(shell, symbols, segments, theme)
+
+	// [DEBUG]
+	spew.Dump(p)
 
 	fmt.Print(p.PrintSegments())
 }
