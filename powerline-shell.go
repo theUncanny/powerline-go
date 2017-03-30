@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/otann/powerline-go/powerline"
+	"github.com/theUncanny/powerline-go/powerline"
 )
 
 func main() {
