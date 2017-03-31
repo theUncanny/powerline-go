@@ -18,7 +18,7 @@ If you haven't install go, please do by using your favourite package manager, i.
     
 Don't forget to set `$GOPATH` in your shell profile and update `$PATH`, something like:
     
-    export GOPATH=$HOME/golang
+    export GOPATH=$HOME/go
     export PATH="$GOPATH/bin:$PATH"
     
 
@@ -32,7 +32,7 @@ Then install the binary with
 Install powerline-shell-go and add the following to your `~/.bashrc`
 
     function _update_ps1() {
-       export PS1="$(powerline-shell-go bash $? 2> /dev/null)"
+       export PS1="$(powerline-shell bash $? 2> /dev/null)"
     }
 
     export PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
@@ -42,7 +42,7 @@ Install powerline-shell-go and add the following to your `~/.bashrc`
 Install powerline-shell-go and add the following to your `~/.zshrc`
 
     function powerline_precmd() {
-      export PS1="$(powerline-shell-go zsh $? 2> /dev/null)"
+      export PS1="$(powerline-shell zsh $? 2> /dev/null)"
     }
 
     function install_powerline_precmd() {
