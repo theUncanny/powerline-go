@@ -24,8 +24,8 @@ Don't forget to set `$GOPATH` in your shell profile and update `$PATH`, somethin
 
 Then install the binary with
 
-    go get github.com/otann/powerline-go
-    go install github.com/otann/powerline-go
+    go get github.com/theUncanny/powerline-go
+    go install github.com/theUncanny/powerline-go
 
 ### Bash
 
