@@ -22,14 +22,14 @@ Don't forget to set `$GOPATH` in your shell profile and update `$PATH`, somethin
     export PATH="$GOPATH/bin:$PATH"
     
 
-Then install the binary with
+Then install the binary with:
 
     go get -u github.com/theUncanny/powerline-go
     go install github.com/theUncanny/powerline-go
 
 ### Bash
 
-Install powerline-shell-go and add the following to your `~/.bashrc`
+Install `powerline-shell` and add the following to your `~/.bashrc`:
 
     function _update_ps1() {
        export PS1="$(powerline-shell bash $? 2> /dev/null)"
@@ -39,7 +39,7 @@ Install powerline-shell-go and add the following to your `~/.bashrc`
 
 ### Zsh
 
-Install powerline-shell-go and add the following to your `~/.zshrc`
+Install `powerline-shell` and add the following to your `~/.zshrc`:
 
     function powerline_precmd() {
       export PS1="$(powerline-shell zsh $? 2> /dev/null)"
